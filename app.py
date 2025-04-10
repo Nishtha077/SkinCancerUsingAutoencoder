@@ -12,48 +12,43 @@ import requests
 import os
 import streamlit as st
 from huggingface_hub import login
-# from transformers import AutoModel, AutoTokenizer
 from dotenv import load_dotenv
 import streamlit as st
 st.set_page_config(page_title="HSI Cancer Detector", layout="centered")
 st.title("🔬 Skin Cancer Detection using Hyperspectral Imaging")
 
-
-load_dotenv()
-
-
 REPO_ID = "Nishtha001/CNNAE"
 FILENAME = "cnn_model.keras"
 
-hf_token = os.getenv("HUGGINGFACEHUB_API_TOKEN")
+# ✅ Get token from Streamlit secrets
+hf_token = st.secrets.get("HUGGINGFACEHUB_API_TOKEN")
+
 if not hf_token:
-    st.error("❌ Hugging Face token not found. Set it in .env or Streamlit Secrets.")
+    st.error("❌ Hugging Face token not found in secrets!")
     st.stop()
 
-# try:
-#     login(token=hf_token)
-# except Exception as e:
-#     st.error(f"Login failed: {e}")
-#     st.stop()
-
-
-# Download model from Hugging Face Hub
+# ✅ Force download from Hub (not cache)
 try:
-    model_path = hf_hub_download(repo_id=REPO_ID, filename=FILENAME)
+    model_path = hf_hub_download(
+        repo_id=REPO_ID,
+        filename=FILENAME,
+        token=hf_token,
+        local_dir="/tmp/hf_model",        # Force download to tmp
+        local_dir_use_symlinks=False,     # Avoid symlinks for Streamlit
+        force_download=True               # 🚨 Force fresh download
+    )
     st.success("✅ Model downloaded from Hugging Face.")
 except Exception as e:
     st.error(f"❌ Failed to download model: {e}")
     st.stop()
 
-
-# Load the Keras model
+# ✅ Load model
 try:
     model = tf.keras.models.load_model(model_path, compile=False)
-    st.success("✅ Keras model loaded successfully.")
+    st.success("✅ Model loaded successfully.")
 except Exception as e:
     st.error(f"❌ Failed to load model: {e}")
     st.stop()
-
 
 TARGET_SIZE = (128, 128)
 NUM_BANDS = 31
