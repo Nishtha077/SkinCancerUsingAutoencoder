@@ -1,6 +1,9 @@
 # 🧬 Skin Cancer Detection using Hyperspectral Imaging
 
-Live demo: [skin-cancer-detection-001.streamlit.app](https://skin-cancer-detection-001.streamlit.app)
+Live demo: [https://skincancerusingautoencoder001.streamlit.app/](https://skincancerusingautoencoder001.streamlit.app/)
+
+RGB to HSI conversion :[https://github.com/Nishtha077/rgb_to_hsi](https://github.com/Nishtha077/rgb_to_hsi)
+
 
 This Streamlit app detects potential cancerous regions in hyperspectral skin images using a **CNN Autoencoder**. It works on the principle that abnormal (cancerous) areas have a **higher reconstruction error** when compared to healthy tissue.
 
